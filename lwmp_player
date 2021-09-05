@@ -1,0 +1,32 @@
+#/bin/sh
+
+play()
+{
+    vol=$(echo "-32768 * ($1 / 100)" | bc -l | cut -f1 -d ".")
+    mpg123 -q -f $vol "$2"
+}
+
+stop()
+{
+    pkill mpg123
+}
+
+playlist="$(readlink -f $1)"
+volume=$2
+
+while true
+do
+    for song in $playlist/*.mp3
+    do
+        play $volume "$song" &
+
+        while pgrep mpg123 > /dev/null
+        do
+            status=$(head -1 $HOME/.lwmp_status)
+            echo "" > $HOME/.lwmp_status
+
+            [ "$status" = "skip" ] && stop && break
+            [ "$status" = "stop" ] && stop && return
+        done
+    done
+done

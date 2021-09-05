@@ -1,0 +1,4 @@
+#/bin/sh
+
+nohup lwmp_player "$@" > /dev/null 2>&1 &
+tput cnorm
