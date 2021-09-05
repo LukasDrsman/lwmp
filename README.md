@@ -1,2 +1,2 @@
 # lwmp
-A simple music player, written in POSIX shell
+A simple mp3 player, written in POSIX shell
