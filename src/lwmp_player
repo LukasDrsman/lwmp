@@ -11,14 +11,23 @@ stop()
     pkill mpg123
 }
 
-playlist="$(readlink -f $1)"
+album="$(readlink -f $1)"
 volume=$2
 
 while true
 do
-    for song in $playlist/*.mp3
+    for song in $album/*.mp3
     do
         play $volume "$song" &
+
+        data=$(echo "$song" | tr "/" "\n" | tail -3)
+        song_name=$(sed -n "3p" <<< $data)
+        album_name=$(sed -n "2p" <<< $data)
+        artist_name=$(sed -n "1p" <<< $data)
+
+        printf "\u001b[31mplaying\u001b[0m\t ${song_name%.*}\n" > $HOME/.lwmp_playing
+        printf "\u001b[35mby\u001b[0m\t $artist_name\n" >> $HOME/.lwmp_playing
+        printf "\u001b[34mfrom\u001b[0m\t $album_name\n" >> $HOME/.lwmp_playing
 
         while pgrep mpg123 > /dev/null
         do
@@ -26,7 +35,7 @@ do
             echo "" > $HOME/.lwmp_status
 
             [ "$status" = "skip" ] && stop && break
-            [ "$status" = "stop" ] && stop && return
+            [ "$status" = "stop" ] && stop && exit 0
         done
     done
 done
