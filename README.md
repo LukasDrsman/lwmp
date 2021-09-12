@@ -1,5 +1,5 @@
 # lwmp
-A simple mp3 player, written in POSIX shell
+A simple mp3 player written in POSIX shell
 
 ## Dependencies
  - `mpg123`
