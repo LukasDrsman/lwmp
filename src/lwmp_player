@@ -28,7 +28,7 @@ volume=$2
 
 while true
 do
-    for song in $(cat $playlist)
+    for song in "$(cat $playlist)"
     do
 
         play $volume "$PREF/$song.mp3" &
