@@ -26,7 +26,7 @@ COL3="\u001b[34m"
 ### Commands
 | command | effect | args |
 |---------|--------|------|
-|`lwmp`   |play album | `[playlist file]`, `[volume percentile]` |
+|`lwmp`   |play album | playlist file, volume percentile |
 |`lwmp_stop`|stop lwmp | none |
 |`lwmp_skip`|skip song | none |
 |`lwmp_status`|print status | none |
