@@ -11,23 +11,36 @@ stop()
     pkill mpg123
 }
 
-album="$(readlink -f $1)"
+if [ -f "$HOME/.config/lwmprc" ];
+then
+    set -a
+    . $HOME/.config/lwmprc
+    set +a
+else
+    PREF="$HOME/music"
+    COL1="\u001b[31m"
+    COL2="\u001b[35m"
+    COL3="\u001b[34m"
+fi
+
+playlist="$1"
 volume=$2
 
 while true
 do
-    for song in $album/*.mp3
+    for song in $(cat $playlist)
     do
-        play $volume "$song" &
+
+        play $volume "$PREF/$song.mp3" &
 
         data=$(echo "$song" | tr "/" "\n" | tail -3)
         song_name=$(sed -n "3p" <<< $data)
         album_name=$(sed -n "2p" <<< $data)
         artist_name=$(sed -n "1p" <<< $data)
 
-        printf "\u001b[31mplaying\u001b[0m\t ${song_name%.*}\n" > $HOME/.lwmp_playing
-        printf "\u001b[35mby\u001b[0m\t $artist_name\n" >> $HOME/.lwmp_playing
-        printf "\u001b[34mfrom\u001b[0m\t $album_name\n" >> $HOME/.lwmp_playing
+        printf "${COL1}playing\u001b[0m\t ${song_name%.*}\n" > $HOME/.lwmp_playing
+        printf "${COL2}by\u001b[0m\t $artist_name\n" >> $HOME/.lwmp_playing
+        printf "${COL3}from\u001b[0m\t $album_name\n" >> $HOME/.lwmp_playing
 
         while pgrep mpg123 > /dev/null
         do
